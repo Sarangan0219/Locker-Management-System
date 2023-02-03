@@ -14,5 +14,7 @@ public interface LockerRepository {
 
     Locker getLocker(int lockerId);
 
-    void deAllocateSlot(int lockerId, int slotId);
+    Slot deAllocateSlot(int lockerId, int slotId);
+
+    Slot allocateSlot(int lockerId, Slot slot, LockerItem lockerItem);
 }

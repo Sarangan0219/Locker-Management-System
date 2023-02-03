@@ -1,6 +1,7 @@
 package org.locker.repository;
 
 import org.locker.model.Locker;
+import org.locker.model.LockerItem;
 import org.locker.model.Size;
 import org.locker.model.Slot;
 
@@ -40,14 +41,21 @@ public class InMemoryLockerRepository implements LockerRepository{
         return lockers.stream().filter((locker) -> locker.getLockerId() == lockerId).findFirst().orElse(null);
     }
 
-    public Locker getSlot(int slotId) {
+    public Locker getSlot(int lockerId, int slotId) {
         return lockers.stream().filter((locker) -> locker.getLockerId() == slotId).findFirst().orElse(null);
     }
 
-    public void deAllocateSlot(int lockerId, int slotId) {
+    public Locker deAllocateSlot(int lockerId, int slotId) {
         Locker locker = getLocker(lockerId);
         Slot slot = locker.getSlot(slotId);
         slot.deAllocateItem();
+        return locker;
+    }
+
+    @Override
+    public Slot allocateSlot(int lockerId, Slot slot, LockerItem item) {
+        slot.allocateItem(item);
+        return slot;
     }
 
 

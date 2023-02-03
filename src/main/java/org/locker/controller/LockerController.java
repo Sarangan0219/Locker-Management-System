@@ -1,15 +1,14 @@
 package org.locker.controller;
 
-import org.locker.model.LockerItem;
-import org.locker.model.LockerUser;
-import org.locker.model.Size;
-import org.locker.model.Slot;
+import org.locker.dto.SlotDTO;
+import org.locker.model.*;
 import org.locker.service.LockerService;
 import org.locker.service.NotificationService;
 import org.locker.service.OTPService;
 import org.locker.service.SlotService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class LockerController {
 
@@ -25,11 +24,11 @@ public class LockerController {
         this.notificationService = notificationService;
     }
 
-    public void createLocker(int lockerId, Size size, List<Slot> slots) {
-        lockerService.createLocker(lockerId, size, slots);
+    public LockerDTO createLocker(int lockerId, Size size, List<Slot> slots) {
+        Locker locker = lockerService.createLocker(lockerId, size, slots);
     }
 
-    public List<Slot> getAvailableSlots(int lockerId) {
+    public List<SlotDTO> getAvailableSlots(int lockerId) {
         return slotService.getAvailableSlots(lockerId);
     }
 
@@ -37,11 +36,11 @@ public class LockerController {
         return otpService.validateOTP(slotId, otp);
     }
 
-    public Slot allocateSlot(int lockerId, LockerItem lockerItem, LockerUser user) {
-        Slot slot = slotService.allocateSlot(lockerId, lockerItem);
-        String otp = otpService.generateOTP(slot.getSlotId());
-        notificationService.notifyUser(user, otp, slot);
-        return slot;
+    public SlotDTO allocateSlot(int lockerId, LockerItem lockerItem, LockerUser user) {
+        SlotDTO slotDTO = slotService.allocateSlot(lockerId, lockerItem);
+        String otp = otpService.generateOTP(slotDTO.getSlotId());
+        notificationService.notifyUser(user, otp, slotDTO.getSlotId());
+        return slotDTO;
     }
 
     public void deallocateSlot(int lockerId, int slotId) {
