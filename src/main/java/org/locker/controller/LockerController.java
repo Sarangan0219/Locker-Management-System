@@ -24,8 +24,9 @@ public class LockerController {
         this.notificationService = notificationService;
     }
 
-    public LockerDTO createLocker(int lockerId, Size size, List<Slot> slots) {
+    public Locker createLocker(int lockerId, Size size, List<Slot> slots) {
         Locker locker = lockerService.createLocker(lockerId, size, slots);
+        return locker;
     }
 
     public List<SlotDTO> getAvailableSlots(int lockerId) {
